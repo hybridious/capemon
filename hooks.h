@@ -1405,6 +1405,11 @@ extern HOOKDEF(LPTOP_LEVEL_EXCEPTION_FILTER, WINAPI, SetUnhandledExceptionFilter
     _In_  LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter
 );
 
+extern HOOKDEF(PVOID, WINAPI, RtlAddVectoredExceptionHandler,
+    __in    ULONG First,
+    __out   PVECTORED_EXCEPTION_HANDLER Handler
+);
+
 extern HOOKDEF(UINT, WINAPI, SetErrorMode,
 	_In_ UINT uMode
 );
@@ -2791,6 +2796,11 @@ extern HOOKDEF(NTSTATUS, WINAPI, NtQuerySystemInformation,
 	_Inout_ PVOID SystemInformation,
 	_In_ ULONG SystemInformationLength,
 	_Out_opt_ PULONG ReturnLength
+);
+
+extern HOOKDEF(unsigned int, WINAPIV, SizeofResource,
+    _In_opt_ HMODULE hModule,
+    _In_     HRSRC   hResInfo
 );
 
 extern HOOKDEF(void, WINAPIV, srand,

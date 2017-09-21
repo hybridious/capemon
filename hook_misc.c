@@ -93,6 +93,19 @@ HOOKDEF(LPTOP_LEVEL_EXCEPTION_FILTER, WINAPI, SetUnhandledExceptionFilter,
     return res;
 }
 
+HOOKDEF(PVOID, WINAPI, RtlAddVectoredExceptionHandler,
+    __in    ULONG First,
+    __out   PVECTORED_EXCEPTION_HANDLER Handler
+) {
+	PVOID ret = 0;
+    
+    ret = Old_RtlAddVectoredExceptionHandler(First, Handler);
+	
+    LOQ_nonnull("hooking", "ip", "First", First, "Handler", Handler);
+    
+    return ret;
+}
+
 HOOKDEF(UINT, WINAPI, SetErrorMode,
 	_In_ UINT uMode
 ) {
@@ -1033,6 +1046,18 @@ HOOKDEF(void, WINAPIV, memcpy,
         LOQ_void("misc", "bi", "DestinationBuffer", count, dest, "count", count);
 	
 	return;
+}
+
+HOOKDEF(unsigned int, WINAPIV, SizeofResource,
+    _In_opt_ HMODULE hModule,
+    _In_     HRSRC   hResInfo
+)
+{
+	unsigned int ret = Old_SizeofResource(hModule, hResInfo);
+
+	LOQ_nonzero("misc", "ppi", "ModuleHandle", hModule, "ResourceInfo", hResInfo, "Size", ret);
+    
+    return ret;
 }
 
 HOOKDEF(void, WINAPIV, srand,
